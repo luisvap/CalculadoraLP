@@ -1,109 +1,158 @@
+
 package br.uniso;
 
+import java.awt.event.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
+public class Calculadora extends JFrame implements ActionListener {
 
-public class Calculadora {
+    static JFrame f;
 
-    static String textoDoDisplay = "";
 
-    static int ultimo;
-    static int soma;
-    static int vezesClicadasBotaoSomar;
-    static List<Integer> lista = new ArrayList<>();
+    static JTextField l;
 
-    public static void main(String args[]){
-        JFrame tela = new JFrame("Calculadora");
-        tela.setSize(100, 300);
-        JButton button1 = new JButton("1");
-        JButton button2 = new JButton("2");
-        JButton buttonMais = new JButton("+");
-        JButton limpar = new JButton("CE");
-        JButton limparSoUltimo = new JButton("C");
 
-        JPanel preenchimento = new JPanel();
-        preenchimento.add(button1);
-        preenchimento.add(button2);
-        preenchimento.add(buttonMais);
-
-        preenchimento.add(limpar);
-        preenchimento.add(limparSoUltimo);
-        JTextField texto = new JTextField();
-        texto.setEditable(false);
-        texto.setColumns(50);
-        preenchimento.add(texto);
-
-        button1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textoDoDisplay = textoDoDisplay + 1;
-                texto.setText(textoDoDisplay);
-                //lista.add(Integer.valueOf(textoDoDisplay));
-                ultimo = Integer.valueOf(textoDoDisplay);
-            }
-        });
-
-        button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textoDoDisplay = textoDoDisplay + 2;
-                texto.setText(textoDoDisplay);
-                //lista.add(Integer.valueOf(textoDoDisplay));
-                ultimo = Integer.valueOf(textoDoDisplay);
-            }
-        });
-
-        limpar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textoDoDisplay = "";
-                texto.setText(textoDoDisplay);
-                lista.clear();
-            }
-        });
-
-        limparSoUltimo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textoDoDisplay = textoDoDisplay.substring(0, textoDoDisplay.length() - 1);
-                texto.setText(textoDoDisplay);
-            }
-        });
+    String s0 = "";
+    String s1 = "";
+    String s2 = "";
 
 
 
-        buttonMais.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+    // main function
+    public static void main(String args[])
+    {
 
-                vezesClicadasBotaoSomar = vezesClicadasBotaoSomar + 1;
-                //if(lista.size() > 1){
-                 //   for(Integer i : lista){
-                       soma = soma + ultimo;
-                 //   }
-                   if(vezesClicadasBotaoSomar % 2 == 0){
+        f = new JFrame("calculator");
 
-                       textoDoDisplay = String.valueOf(soma);
-                       soma = 0;
+        try {
 
-                   }
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
-             //   }
-                else{
-                    textoDoDisplay = "";
-                }
 
-                texto.setText((textoDoDisplay));
-            }
-        });
+        Calculadora c = new Calculadora();
 
-        tela.getContentPane().add(preenchimento);
 
-        tela.setVisible(true);
-        tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        l = new JTextField(16);
+
+
+        l.setEditable(false);
+
+
+        JButton b1, b2,  ba, be, beq, beq1;
+
+
+
+        b1 = new JButton("1");
+        b2 = new JButton("2");
+
+
+        beq1 = new JButton("=");
+
+        ba = new JButton("+");
+
+        beq = new JButton("C");
+
+
+        be = new JButton(".");
+
+
+        JPanel p = new JPanel();
+
+
+        ba.addActionListener(c);
+
+        b2.addActionListener(c);
+        b1.addActionListener(c);
+
+        be.addActionListener(c);
+        beq.addActionListener(c);
+        beq1.addActionListener(c);
+
+        // add elements to panel
+        p.add(l);
+        p.add(ba);
+        p.add(b1);
+        p.add(b2);
+
+        p.add(be);
+
+        p.add(beq);
+        p.add(beq1);
+
+
+        p.setBackground(Color.GRAY);
+
+
+        f.add(p);
+
+        f.setSize(200, 220);
+        f.setVisible(true);
     }
+    public void actionPerformed(ActionEvent e)
+    {
+        String s = e.getActionCommand();
 
+
+        if ((s.charAt(0) >= '0' && s.charAt(0) <= '9') || s.charAt(0) == '.') {
+
+            if (!s1.equals(""))
+                s2 = s2 + s;
+            else
+                s0 = s0 + s;
+
+
+            l.setText(s0 + s1 + s2);
+        }
+        else if (s.charAt(0) == 'C') {
+
+            s0 = s1 = s2 = "";
+
+
+            l.setText(s0 + s1 + s2);
+        }
+        else if (s.charAt(0) == '=') {
+
+            double te;
+
+
+                te = (Double.parseDouble(s0) + Double.parseDouble(s2));
+
+
+
+            l.setText(s0 + s1 + s2 + "=" + te);
+
+
+            s0 = Double.toString(te);
+
+            s1 = s2 = "";
+        }
+        else {
+
+            if (s1.equals("") || s2.equals(""))
+                s1 = s;
+
+            else {
+                double te;
+
+
+                    te = (Double.parseDouble(s0) + Double.parseDouble(s2));
+
+
+                s0 = Double.toString(te);
+
+
+                s1 = s;
+
+                s2 = "";
+            }
+
+
+            l.setText(s0 + s1 + s2);
+        }
+    }
 }
+
